@@ -28,37 +28,46 @@ namespace SumControlVeryfication
 
         public static int Process(string path)
         {
-            var xmlFile = XElement.Load(path);
-
-            int iterations = Convert.ToInt16(xmlFile.Element("iterations").Value);
-            if (iterations < 1 || iterations > 8)
+            try
             {
-                //throw new Exception("Iteration should be between <1, 8>");
-                return -1;
-            }
+                var xmlFile = XElement.Load(path);
 
-            int confirmationdata = Convert.ToInt16(xmlFile.Element("confirmationdata").Value);
-
-            var values = new List<int>();
-
-            foreach (XElement value in xmlFile.Descendants("value"))
-            {
-                if (Convert.ToInt16(value.Value) < -10 || Convert.ToInt16(value.Value) > 10)
+                int iterations = Convert.ToInt16(xmlFile.Element("iterations").Value);
+                if (iterations < 1 || iterations > 8)
                 {
-                    //throw new Exception("Value should be a number between <-10, 10>");
+                    //throw new Exception("Iteration should be between <1, 8>");
                     return -1;
                 }
-                    
-                values.Add(Convert.ToInt16(value.Value));
-            }
 
-            if (values.Count > 5 || values.Count == 0)
+                int confirmationdata = Convert.ToInt16(xmlFile.Element("confirmationdata").Value);
+
+                var values = new List<int>();
+
+                foreach (XElement value in xmlFile.Descendants("value"))
+                {
+                    if (Convert.ToInt16(value.Value) < -10 || Convert.ToInt16(value.Value) > 10)
+                    {
+                        //throw new Exception("Value should be a number between <-10, 10>");
+                        return -1;
+                    }
+
+                    values.Add(Convert.ToInt16(value.Value));
+                }
+
+                if (values.Count > 5 || values.Count == 0)
+                {
+                    //throw new Exception("List of values cannot be grather than 5");
+                    return -1;
+                }
+
+                return VerificationSumControl(iterations, confirmationdata, values);
+            }
+            catch(Exception ex)
             {
-                //throw new Exception("List of values cannot be grather than 5");
+                Console.WriteLine(ex.Message);
                 return -1;
             }
-
-            return VerificationSumControl(iterations, confirmationdata, values);
+            
         }
     }
 }
