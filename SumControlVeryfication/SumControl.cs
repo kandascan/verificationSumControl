@@ -11,11 +11,8 @@ namespace SumControlVeryfication
 {
     public static class SumControl
     {
-        private static int VerificationSumControl(int iteration, int confirmation, List<int> values)
+        private static int VerificationSumControl(int iteration, List<int> values)
         {
-            if (confirmation <= 0)
-                return 0;
-
             var sumControll = 1;
 
             for (int i = 0; i < iteration; i++)
@@ -39,7 +36,10 @@ namespace SumControlVeryfication
                     return -1;
                 }
 
-                int confirmationdata = Convert.ToInt16(xmlFile.Element("confirmationdata").Value);
+                int confirmation = Convert.ToInt16(xmlFile.Element("confirmationdata").Value);
+
+                if (confirmation <= 0)
+                    return 0;
 
                 var values = new List<int>();
 
@@ -60,7 +60,7 @@ namespace SumControlVeryfication
                     return -1;
                 }
 
-                return VerificationSumControl(iterations, confirmationdata, values);
+                return VerificationSumControl(iterations, values);
             }
             catch(Exception ex)
             {
